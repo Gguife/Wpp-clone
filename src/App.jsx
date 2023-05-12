@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useEffect } from 'react';
+
 //Components
 import { ChatListItem } from './components/chatList/ChatListItem'
 import { ChatIntro } from './components/chatIntro/ChatIntro';

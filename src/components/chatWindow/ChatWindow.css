@@ -38,6 +38,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: hidden;
+  transition: all ease .4s;
 }
 
 /*BODY*/
@@ -77,4 +79,17 @@
 .chat-window-pos{
   display: flex;
   margin: 0 15px;
+}
+
+
+/*EMOJI AREA*/ 
+.chat-window-emojiArea{
+  overflow-y: hidden;
+  transition: all ease .4s;
+}
+aside.EmojiPickerReact {
+  width: auto !important;
+}
+.EmojiPickerReact .emoji-group::before{
+  background: black;
 }

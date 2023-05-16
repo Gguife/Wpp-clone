@@ -1,6 +1,8 @@
 import './ChatWindow.css'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import EmojiPicker from 'emoji-picker-react';
+//COMPONENT
+import { MessageItem } from '../messageItem/MessageItem'
 //ICONS
 import SearchIcon from '@mui/icons-material/Search';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -10,11 +12,92 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 
-export const ChatWindow = () => {
+export const ChatWindow = ({user}) => {
+
+  const body = useRef()
+
+  //Funcionalidade do MIC
+  let recognition = null;
+  let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SpeechRecognition !== undefined){
+    recognition = new SpeechRecognition();
+  }
+
   const [emojiOpen, setEmojiOpen] = useState(false)
+  const [text, setText] = useState('')
+  const [listening, setListening] = useState(false)
+  const [list, setList] = useState([
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+    {author: 123, body: 'blablabla'},
+    {author: 123, body: 'abla'},
+    {author: 1234, body: 'baldlbadblblablabla'},
+  ])
 
-  const handleEmojiClick = () => {
+  //Send Button && Mic button
+  const handleSendClick = () =>{
 
+  }
+  const handleMicClick = () =>{
+    if(recognition !== null){
+      recognition.onstart = () =>{
+        setListening(true)
+      }
+      recognition.onend = () =>{
+        setListening(false)
+      }
+      recognition.onresult = (e) =>{
+        setText(e.results[0][0].transcript)
+      }
+    }
+
+    recognition.start()
   }
 
   //Open and Close Emoji
@@ -25,6 +108,13 @@ export const ChatWindow = () => {
     setEmojiOpen(false)
   }
 
+  //Chat start forma(iniciando pela ultima mensagem enviada)
+  useEffect(() =>{
+    if(body.current.scrollHeight > body.current.offsetHeight){
+      body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight
+    }
+  }, [list])
+  
   return (
     <div className='chat-window'>
       <div className="chat-window-header">
@@ -39,14 +129,19 @@ export const ChatWindow = () => {
          </div>
       </div>
 
-      <div className="chat-window-body">
-
+      <div ref={body} className="chat-window-body">
+        {list.map((i, k) => (
+          <MessageItem key={k} data={i} user={user} />
+        ))}
       </div>
 
-      <div className="chat-window-emojiArea" style={{height: emojiOpen ? '450px' : '0px'}}>
+      <div className="chat-window-emojiArea" style={{height: emojiOpen ? '350px' : '0px'}}>
         <EmojiPicker
-          disableSearchBar={true}
-          onEmojiClick={handleEmojiClick}
+          width={'100%'}
+          height={'100%'}
+          searchDisabled
+          skinTonesDisabled
+          onEmojiClick={({ emoji }) => setText(text + emoji)}
         />
       </div>
 
@@ -57,10 +152,19 @@ export const ChatWindow = () => {
         </div>
 
         <div className="chat-window-input">
-          <input className='window-input' placeholder='Digite uma mensagem' type="text" />
+          <input className='window-input' placeholder='Digite uma mensagem' type="text" value={text} onChange={e => setText(e.target.value)} />
         </div>
         <div className="chat-window-pos">
-          <div className="window-btn"><SendIcon style={{color: '#919191'}} /></div>
+          {text == '' &&
+            <div className="window-btn" onClick={handleMicClick}>
+              <MicIcon style={{color: listening ? '#126ECE' : '#919191'}} />
+            </div>
+          }
+          {text !== '' &&  
+            <div className="window-btn" onClick={handleSendClick}>
+              <SendIcon style={{color: '#919191'}} />
+            </div>
+          }
         </div>
       </div>
     </div>

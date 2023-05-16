@@ -21,12 +21,17 @@ function App() {
     {chatId: 5, title: 'Fulano de Tal', image: 'https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png'},
   ])
   const [activeChat, setActiveChat] = useState({})
+  const [user, setUser] = useState({
+    id: 1234,
+    avatar: 'https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png',
+    name: 'Guilherme Gomes'
+  })
 
   return (
     <div className="app-window">
       <div className="sidebar">
         <header>
-          <img className='header-avatar' src="https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png" alt="" />
+          <img className='header-avatar' src={user.avatar} alt="" />
           <div className="header-buttons">
             <div className="header-btn">
               <DonutLargeIcon style={{color: '#919191'}} />
@@ -53,7 +58,7 @@ function App() {
       </div>
       <div className="content-area">
         {activeChat.chatId !== undefined &&
-          <ChatWindow />
+          <ChatWindow user={user} />
         }
         {activeChat.chatId == undefined &&
           <ChatIntro />

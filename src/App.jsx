@@ -2,9 +2,10 @@ import './App.css'
 import { useState, useEffect } from 'react';
 
 //Components
-import { ChatListItem } from './components/chatList/ChatListItem'
+import { ChatListItem } from './components/chatList/ChatListItem';
 import { ChatIntro } from './components/chatIntro/ChatIntro';
 import { ChatWindow } from './components/chatWindow/ChatWindow';
+import { NewChat } from './components/newChat/NewChat';
 //ICONS
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -20,6 +21,7 @@ function App() {
     {chatId: 4, title: 'Fulano de Tal', image: 'https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png'},
     {chatId: 5, title: 'Fulano de Tal', image: 'https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png'},
   ])
+  
   const [activeChat, setActiveChat] = useState({})
   const [user, setUser] = useState({
     id: 1234,
@@ -27,16 +29,30 @@ function App() {
     name: 'Guilherme Gomes'
   })
 
+  const [showNewChat, setShowNewChat] = useState(false)
+
+  const handleNewChat = () =>{
+    setShowNewChat(true)
+  }
+
   return (
     <div className="app-window">
       <div className="sidebar">
+
+        <NewChat
+          chatList={chatList}
+          user={user}
+          show={showNewChat} 
+          setShow={setShowNewChat} 
+        />
+
         <header>
           <img className='header-avatar' src={user.avatar} alt="" />
           <div className="header-buttons">
             <div className="header-btn">
               <DonutLargeIcon style={{color: '#919191'}} />
             </div>
-            <div className="header-btn">
+            <div onClick={handleNewChat} className="header-btn">
               <ChatIcon style={{color: '#919191'}} />
             </div>
             <div className="header-btn">
